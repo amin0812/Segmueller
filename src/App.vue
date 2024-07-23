@@ -1,5 +1,6 @@
 <script setup>
-import { onUpdated, ref } from 'vue';
+import { onMounted, onUpdated, ref, unref } from 'vue';
+import { cloneDeep } from 'lodash';
 import sdkclass from 'blocksdk';
 
 const sdk = new sdkclass();
@@ -9,16 +10,7 @@ const formValues = ref({});
 
 
 
-function setcont() {
-  const content = document.querySelector("#widget-content").innerHTML;
-  console.log(content);
-  sdk.setContent(content);
-  console.log(sdk);
-}
-
-
 const vueform = ref({
-
   size: 'md',
   displayErrors: false,
   onChange: (Values) => { formValues.value = Values },
@@ -36,27 +28,30 @@ const vueform = ref({
     content: {
       type: 'editor',
     },
-    customField: {
-      type: 'custom',
-    }
   }
 
 })
 
-onUpdated(setcont);
+onMounted(() => {
+  sdk.getData((data) => {
+    formValues.value = data;
+  })
+});
+
+onUpdated(() => {
+  const content = document.querySelector("#widget-content").innerHTML;
+  sdk.setData(cloneDeep(unref(formValues)));
+  sdk.setContent(content);
+});
 
 </script>
 
 
 <template>
-  <Vueform v-bind="vueform"/>
+  <Vueform v-bind="vueform" />
 
   <div id="widget-content">
     <h1> {{ formValues.headline }}</h1>
     <div v-html="formValues.content"></div>
-    <div v-html="formValues.elem"></div>
-
-
-
   </div>
 </template>
