@@ -8,8 +8,6 @@ const sdk = new sdkclass();
 
 const formValues = ref({});
 
-
-
 const vueform = ref({
   size: 'md',
   displayErrors: false,
@@ -35,6 +33,8 @@ const vueform = ref({
 onMounted(() => {
   sdk.getData((data) => {
     formValues.value = data;
+    vueform.value.default = data;
+    updateKey.value++;
   })
 });
 
@@ -44,11 +44,13 @@ onUpdated(() => {
   sdk.setContent(content);
 });
 
+const updateKey = ref(0);
+
 </script>
 
 
 <template>
-  <Vueform v-bind="vueform" />
+  <Vueform :key="updateKey" v-bind="vueform" />
 
   <div id="widget-content">
     <h1> {{ formValues.headline }}</h1>

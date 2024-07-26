@@ -27,3 +27,7 @@ and reference the value in your template section:
 <p>{{ formValues.newInput }}</p>
 ...
 ```
+## Deployment
+* build widget by running `yarn build`
+* copy `/dist/index.html` to a cloudpage 
+* [configure](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/develop-block-widget.html#block-widget-url) the cloudpage as custom widget
